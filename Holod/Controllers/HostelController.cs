@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Holod.Models.Database;
 using Holod.Models.Files;
@@ -40,12 +38,12 @@ namespace Holod.Controllers
         {
             try
             {
-                string directoryPhotos = configuration.GetSection("ImagesDirectory").Get<string>();
+                string directoryPhotos = configuration.GetSection("HostelPhotoDirectory").Get<string>();
                 string fullFileName = $"{hosting.ContentRootPath}{directoryPhotos}\\{photo.FileName}";
 
                 await new FileSaver().SaveFileAsync(fullFileName, photo);
 
-                hostel.Photo = fullFileName;
+                hostel.Photo = photo.FileName;
                 
                 hostel.Stuffs = new List<Stuff>();
                 hostel.Residents = new List<Resident>();

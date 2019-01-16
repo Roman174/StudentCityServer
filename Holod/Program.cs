@@ -13,6 +13,7 @@ namespace Holod
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseWebRoot("wwwroot")
                 .UseUrls("http://192.168.31.44");
     }
 }

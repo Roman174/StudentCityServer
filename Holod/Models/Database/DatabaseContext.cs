@@ -1,6 +1,5 @@
 ﻿using Holod.Models.Database.Configs;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace Holod.Models.Database
 {

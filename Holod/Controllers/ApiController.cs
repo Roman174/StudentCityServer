@@ -1,6 +1,11 @@
 ﻿using Holod.Models.Database;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Holod.Controllers
 {
@@ -9,38 +14,50 @@ namespace Holod.Controllers
     public class ApiController : ControllerBase
     {
         private readonly DatabaseContext database;
+        private readonly IConfiguration configuration;
 
-        public ApiController(DatabaseContext database)
+        public ApiController(DatabaseContext database, IConfiguration configuration)
         {
             this.database = database;
+            this.configuration = configuration;
         }
 
         [HttpGet]
         [Route("hostels/list")]
         public IActionResult ListHostels()
         {
-            List<Hostel> hostels = new List<Hostel>
+            List<Hostel> hostels;
+            string host = $"{Request.Scheme}://{Request.Host.Host}";
+            try
             {
-                new Hostel
-                {
-                    Title = "Общежитие 7.1",
-                    Address = "asdasdasd",
-                    NumberFloors = 9,
-                    NumberStudents = 1000,
-                    Phone = "89227093130",
-                    Photo = "3333"
-                },
+                hostels = database
+                    .Hostels
+                    .Include(hostel => hostel.Coordinates)
+                    .Include(hostel => hostel.Stuffs)
+                        .ThenInclude(stuff => stuff.Post)
+                    .Include(hostel => hostel.Residents)
+                    .ToList();
+            }
+            catch(ArgumentNullException e)
+            {
+                return BadRequest("object of hostels in database is null");
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
-                new Hostel
+            string hostelDirectory = configuration
+                .GetSection("HostelPhotoDirectories")
+                .ToString();
+
+            hostels = hostels
+                .Select(hostel =>
                 {
-                    Title = "Общежитие 7.2",
-                    Address = "Ленина 80",
-                    NumberFloors = 9,
-                    NumberStudents = 1000,
-                    Phone = "89227093130",
-                    Photo = "3333"
-                }
-            };
+                    hostel.Photo = $"{host}/images/hostels/{hostel.Photo}";
+                    return hostel;
+                })
+                .ToList();
 
             return Ok(hostels);
         }
