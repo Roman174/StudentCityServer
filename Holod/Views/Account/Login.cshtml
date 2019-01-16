@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Авторизация";
+    Layout = "~/Views/Shared/EmptyLayout.cshtml";
+}
+
+<div class="auth-forms">
+    <form class="center-form" method="post" asp-controller="WebAccount" asp-action="Login">
+        <div class="form-group auth-form">
+            <label for="login">Логин</label>
+            <input id="login" class="form-control auth-data" name="model.Login" placeholder="Логин" />
+            <small id="login-help" class="form-text text-muted">Логин от учетной записи администратора</small>
+        </div>
+        <div class="form-group auth-form">
+            <label for="password">Пароль</label>
+            <input id="password" type="password" class="form-control auth-data" name="model.Password" placeholder="Пароль" />
+            <small id="password-help" class="form-text text-muted">Пароль от учетной записи администратора</small>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Войти"/>
+    </form>
+</div>
+

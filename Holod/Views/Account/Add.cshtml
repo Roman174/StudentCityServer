@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Добавление аккаунта";
+}
+
+<form method="post" asp-controller="WebAccount" asp-action="Add" class="account-form">
+    <div class="form-group">
+        <label for="login"></label>
+        <input id="login" class="form-control" name="user.Login" placeholder="Логин"/>
+        <small id="login-help" class="form-text text-muted">Логин для авторизации</small>
+    </div>
+    <div class="form-group">
+        <label for="password"></label>
+        <input id="password" class="form-control" name="user.Password" placeholder="Пароль"/>
+        <small id="login-help" class="form-text text-muted">Пароль для авторизации</small>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Добавить" />
+</form>
