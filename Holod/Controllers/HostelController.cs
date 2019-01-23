@@ -32,6 +32,40 @@ namespace Holod.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Route("hostels/coordinates")]
+        public IActionResult ListCoordinates()
+        {
+            Dictionary<string, Coordinates> coordinates = new Dictionary<string, Coordinates>();
+            string host = $"{Request.Scheme}://{Request.Host.Host}";
+            try
+            {
+                List<Hostel> hostels;
+
+                hostels = database
+                    .Hostels
+                    .Include(hostel => hostel.Coordinates)
+                    .Include(hostel => hostel.Stuffs)
+                        .ThenInclude(stuff => stuff.Post)
+                    .Include(hostel => hostel.Residents)
+                    .ToList();
+
+                foreach (Hostel hostel in hostels)
+                {
+                    coordinates.Add(hostel.Title, hostel.Coordinates);
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                return BadRequest("object of hostels in database is null");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(coordinates);
+        }
 
         [Authorize]
         public async Task<IActionResult> Add(Hostel hostel, IFormFile photo)

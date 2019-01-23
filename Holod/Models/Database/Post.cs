@@ -12,5 +12,11 @@ namespace Holod.Models.Database
         public Stuff Stuff { get; set; }
 
         public Post() => Title = string.Empty;
+
+        public Post(int Id, string Title)
+        {
+            this.Id = Id;
+            this.Title = Title;
+        }
     }
 }

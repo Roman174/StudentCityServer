@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Добавление сотрудника";
+}
+
+<div class="center-form">
+    <form method="post" asp-action="add" asp-controller="stuff" enctype="multipart/form-data">
+        <div class="form-group">
+            <lable for="title">Номер общежития</lable>
+            @Html.DropDownList("hostelTitle", new SelectList(ViewBag.Hostels, "Title", "Title"))
+        </div>
+        <div class="form-group">
+            <lable for="title">Фамилия</lable>
+            <input class="form-control" name="stuff.surname" placeholder="Фамилия" />
+        </div>
+        <div class="form-group">
+            <label for="title">Имя</label>
+            <input class="form-control" name="stuff.firstname" placeholder="Имя" />
+        </div>
+        <div class="form-group">
+            <label for="title">Отчество</label>
+            <input class="form-control" name="stuff.patronymic" placeholder="Отчество" />
+        </div>
+        <div class="form-group">
+            <lable for="title">Должность</lable>
+            @Html.DropDownList("post", new SelectList(ViewBag.Posts, "Title", "Title"))
+        </div>
+        <div class="form-group">
+            <label for="photo">Фотография</label>
+            <input id="photo" type="file" name="photo" /><br>
+        </div>
+        <input style="margin-bottom:60px" type="submit" value="Добавить" />
+    </form>
+</div>
