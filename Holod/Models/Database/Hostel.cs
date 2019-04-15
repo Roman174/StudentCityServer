@@ -32,6 +32,6 @@ namespace Holod.Models.Database
             Coordinates = new Coordinates();
             Stuffs = new List<Stuff>();
             Residents = new List<Resident>();
-        }
+        }        
     }
 }

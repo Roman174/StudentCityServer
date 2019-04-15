@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Holod.Models;
 using Holod.Models.Database;
 using Holod.Models.Files;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +22,14 @@ namespace Holod.Controllers
 
         public HostelController(DatabaseContext database, IHostingEnvironment hosting, IConfiguration configuration)
         {
-            this.database = database;
+            try
+            {
+                this.database = database;
+            }
+            catch
+            {
+                this.database = null;
+            }
             this.hosting = hosting;
             this.configuration = configuration;
         }
@@ -30,89 +38,153 @@ namespace Holod.Controllers
         public IActionResult Index()
         {
             return View();
-        }
-
-        [HttpGet]
-        [Route("hostels/coordinates")]
-        public IActionResult ListCoordinates()
-        {
-            Dictionary<string, Coordinates> coordinates = new Dictionary<string, Coordinates>();
-            string host = $"{Request.Scheme}://{Request.Host.Host}";
-            try
-            {
-                List<Hostel> hostels;
-
-                hostels = database
-                    .Hostels
-                    .Include(hostel => hostel.Coordinates)
-                    .Include(hostel => hostel.Stuffs)
-                        .ThenInclude(stuff => stuff.Post)
-                    .Include(hostel => hostel.Residents)
-                    .ToList();
-
-                foreach (Hostel hostel in hostels)
-                {
-                    coordinates.Add(hostel.Title, hostel.Coordinates);
-                }
-            }
-            catch (ArgumentNullException e)
-            {
-                return BadRequest("object of hostels in database is null");
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
-            return Ok(coordinates);
-        }
+        }        
 
         [Authorize]
-        public async Task<IActionResult> Add(Hostel hostel, IFormFile photo)
+        public async Task<IActionResult> Add(Hostel hostel, string latitude, string longitude, IFormFile photo)
         {
+            string redirectUrl = $"{Request.Scheme}://{Request.Host.Host}/hostels/index";
+            ErrorViewModel errorModel = new ErrorViewModel
+            {
+                RedirectUrl = redirectUrl
+            };
+
+            if (database is null)
+            {
+                errorModel.Message = "Ошибка при подключении к базе данных";
+                return GenereateErrorView(errorModel);
+            }
+
+            if (IsEmpty(hostel) || photo is null)
+            {
+                errorModel.Message = "Введены не все данные";
+                return GenereateErrorView(errorModel);
+            }
+
+            double numericalLatitude;
+            double numericalLongitude;
             try
             {
-                string directoryPhotos = configuration.GetSection("HostelPhotoDirectory").Get<string>();
-                string fullFileName = $"{hosting.ContentRootPath}{directoryPhotos}\\{photo.FileName}";
+                numericalLatitude = double.Parse(latitude);
+                numericalLongitude = double.Parse(longitude);
 
-                await new FileSaver().SaveFileAsync(fullFileName, photo);
-
-                hostel.Photo = photo.FileName;
-                
-                hostel.Stuffs = new List<Stuff>();
-                hostel.Residents = new List<Resident>();
-
-                if(database.StudentCities.Count() == 0)
+                if(numericalLatitude == 0 || numericalLongitude == 0)
                 {
-                    StudentCity studentCity = new StudentCity
-                    {
-                        Photo = "",
-                        Stuffs = new List<Stuff>(),
-                        Hostels = new List<Hostel>()
-                    };
-
-                    studentCity.Hostels.Add(hostel);
-                    database.StudentCities.Add(studentCity);
+                    errorModel.Message = "Ошибка препобразования координат";
+                    return GenereateErrorView(errorModel);
                 }
-                else
-                {
-                    StudentCity studentCity = await database
-                        .StudentCities
-                        .FirstOrDefaultAsync();
-
-                    studentCity.Hostels.Add(hostel);
-                    database.StudentCities.Update(studentCity);
-                }
-                
-                
-                await database.SaveChangesAsync();
-
-                return RedirectToAction("Index");
             }
-            catch(Exception e)
+            catch (ArgumentNullException argumentNullException)
             {
-                return View("Views/Error.cshtml", e.Message);
+                errorModel.Message = "Координаты не введены";
+                return GenereateErrorView(errorModel);
+            }
+            catch(FormatException formatException)
+            {
+                errorModel.Message = "Координаты введены неправильно";
+                return GenereateErrorView(errorModel);
+            }
+            catch(OverflowException overflowException)
+            {
+                errorModel.Message = "Ошибка препобразования координат";
+                return GenereateErrorView(errorModel);
             }            
+
+            string directoryPhotos;
+            string fullFileName;
+            try
+            {
+                directoryPhotos = configuration.GetSection("StuffPhotoDirectory").Get<string>();
+                fullFileName = $"{hosting.ContentRootPath}{directoryPhotos}\\{photo.FileName}";
+
+                if(directoryPhotos.Equals(string.Empty) || fullFileName.Equals(string.Empty))
+                {
+                    errorModel.Message = "Отсутствует информация о директории сохранения фотогрпфии";
+                    return GenereateErrorView(errorModel);
+                }
+            }
+            catch (NullReferenceException nullReferenceException)
+            {
+                errorModel.Message = "Отсутствует информация о директории сохранения фотогрпфии";
+                return GenereateErrorView(errorModel);
+            }
+
+            try
+            {
+                await new FileSaver().SaveFileAsync(fullFileName, photo);
+            }
+            catch(Exception exception)
+            {
+                errorModel.Message = "Ошибка сохранения фотографии";
+                return GenereateErrorView(errorModel);
+            }
+
+            hostel.Photo = photo.FileName;
+            hostel.Coordinates = new Coordinates
+            {
+                Latitude = numericalLatitude,
+                Longitude = numericalLongitude
+            };
+            hostel.Stuffs = new List<Stuff>();
+            hostel.Residents = new List<Resident>();
+
+            if (database.StudentCities.Count() == 0)
+            {
+                StudentCity studentCity = new StudentCity
+                {
+                    Photo = "",
+                    Stuffs = new List<Stuff>(),
+                    Hostels = new List<Hostel>()
+                };
+
+                studentCity.Hostels.Add(hostel);
+                database.StudentCities.Add(studentCity);
+            }
+            else
+            {
+                StudentCity studentCity = await database
+                    .StudentCities
+                    .FirstOrDefaultAsync();
+
+                studentCity.Hostels.Add(hostel);
+                database.StudentCities.Update(studentCity);
+            }
+
+            try
+            {
+                await database.SaveChangesAsync();
+            }
+            catch(DbUpdateException updateException)
+            {
+                errorModel.Message = "Ошибка сохранения в базе данных";
+                return GenereateErrorView(errorModel);
+            }
+
+            return RedirectToAction("Index");
         }
+
+        /// <summary>
+        /// Проверка введенных данных об общежитии
+        /// </summary>
+        /// <param name="hostel">
+        /// Объект общежития, который был получен из веб-формы
+        /// </param>
+        private bool IsEmpty(Hostel hostel)
+        {
+            if (hostel is null)
+                return true;
+
+            if (hostel.Title is null || hostel.Phone is null || hostel.Address is null)
+                return true;
+
+            if (hostel.Title.Equals(string.Empty) || hostel.Phone.Equals(string.Empty)
+                || hostel.Address.Equals(string.Empty) || hostel.NumberFloors == 0
+                || hostel.NumberStudents == 0)
+                return true;
+
+            return false;
+        }
+
+        private ViewResult GenereateErrorView(ErrorViewModel errorModel) => View("Views/Error.cshtml", errorModel);
     }
 }

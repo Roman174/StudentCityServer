@@ -1,11 +1,11 @@
-﻿@model string
+﻿@model ErrorViewModel
 @{
     ViewData["Title"] = "Error";
 }
 
 
 <div class="error-container">
-    <h1>@Model</h1>
+    <h1>@Model.Message</h1>
     <button class="btn btn-danger error-btn">Ок</button>
 </div>
 
