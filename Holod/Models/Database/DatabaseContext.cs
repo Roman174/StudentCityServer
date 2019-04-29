@@ -13,6 +13,8 @@ namespace Holod.Models.Database
         public DbSet<Resident> Residents { get; set; }
         public DbSet<User> Users { get; set; }
 
+        public DbSet<Post> Post { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new HostelConfig());

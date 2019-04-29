@@ -14,6 +14,6 @@ namespace Holod
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .UseWebRoot("wwwroot")
-                .UseUrls("http://192.168.31.44");
+                /*.UseUrls("http://192.168.1.46")*/;
     }
 }

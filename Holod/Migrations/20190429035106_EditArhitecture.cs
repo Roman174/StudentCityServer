@@ -2,7 +2,7 @@
 
 namespace Holod.Migrations
 {
-    public partial class Initial : Migration
+    public partial class EditArhitecture : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,6 +18,19 @@ namespace Holod.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Coordinates", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Post",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Title = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Post", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -115,7 +128,8 @@ namespace Holod.Migrations
                     Patronymic = table.Column<string>(nullable: true),
                     Photo = table.Column<string>(nullable: true),
                     HostelId = table.Column<int>(nullable: true),
-                    StudentCityId = table.Column<int>(nullable: true)
+                    StudentCityId = table.Column<int>(nullable: true),
+                    PostId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,31 +141,17 @@ namespace Holod.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_Stuffs_Post_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Post",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Stuffs_StudentCities_StudentCityId",
                         column: x => x.StudentCityId,
                         principalTable: "StudentCities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Post",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(nullable: true),
-                    StuffId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Post", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Post_Stuffs_StuffId",
-                        column: x => x.StuffId,
-                        principalTable: "Stuffs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -165,12 +165,6 @@ namespace Holod.Migrations
                 column: "StudentCityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Post_StuffId",
-                table: "Post",
-                column: "StuffId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Residents_HostelId",
                 table: "Residents",
                 column: "HostelId");
@@ -181,6 +175,12 @@ namespace Holod.Migrations
                 column: "HostelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Stuffs_PostId",
+                table: "Stuffs",
+                column: "PostId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Stuffs_StudentCityId",
                 table: "Stuffs",
                 column: "StudentCityId");
@@ -189,19 +189,19 @@ namespace Holod.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Post");
-
-            migrationBuilder.DropTable(
                 name: "Residents");
-
-            migrationBuilder.DropTable(
-                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Stuffs");
 
             migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
                 name: "Hostels");
+
+            migrationBuilder.DropTable(
+                name: "Post");
 
             migrationBuilder.DropTable(
                 name: "Coordinates");

@@ -13,6 +13,8 @@ namespace Holod.Models.Database
         public StudentCity StudentCity { get; set; }
 
         public Post Post { get; set; }
+        [ForeignKey("PostId")]
+        public int PostId { get; set; }
 
         public Stuff()
         {

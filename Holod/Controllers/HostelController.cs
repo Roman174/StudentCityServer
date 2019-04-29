@@ -74,27 +74,28 @@ namespace Holod.Controllers
                     return GenereateErrorView(errorModel);
                 }
             }
-            catch (ArgumentNullException argumentNullException)
+            catch (ArgumentNullException)
             {
                 errorModel.Message = "Координаты не введены";
+                
                 return GenereateErrorView(errorModel);
             }
-            catch(FormatException formatException)
+            catch (FormatException)
             {
                 errorModel.Message = "Координаты введены неправильно";
                 return GenereateErrorView(errorModel);
             }
-            catch(OverflowException overflowException)
+            catch (OverflowException)
             {
                 errorModel.Message = "Ошибка препобразования координат";
                 return GenereateErrorView(errorModel);
-            }            
+            }
 
             string directoryPhotos;
             string fullFileName;
             try
             {
-                directoryPhotos = configuration.GetSection("StuffPhotoDirectory").Get<string>();
+                directoryPhotos = configuration.GetSection("HostelPhotoDirectory").Get<string>();
                 fullFileName = $"{hosting.ContentRootPath}{directoryPhotos}\\{photo.FileName}";
 
                 if(directoryPhotos.Equals(string.Empty) || fullFileName.Equals(string.Empty))
@@ -103,7 +104,7 @@ namespace Holod.Controllers
                     return GenereateErrorView(errorModel);
                 }
             }
-            catch (NullReferenceException nullReferenceException)
+            catch (NullReferenceException)
             {
                 errorModel.Message = "Отсутствует информация о директории сохранения фотогрпфии";
                 return GenereateErrorView(errorModel);
@@ -113,7 +114,7 @@ namespace Holod.Controllers
             {
                 await new FileSaver().SaveFileAsync(fullFileName, photo);
             }
-            catch(Exception exception)
+            catch(Exception)
             {
                 errorModel.Message = "Ошибка сохранения фотографии";
                 return GenereateErrorView(errorModel);
@@ -154,7 +155,7 @@ namespace Holod.Controllers
             {
                 await database.SaveChangesAsync();
             }
-            catch(DbUpdateException updateException)
+            catch(DbUpdateException)
             {
                 errorModel.Message = "Ошибка сохранения в базе данных";
                 return GenereateErrorView(errorModel);
@@ -177,8 +178,8 @@ namespace Holod.Controllers
             if (hostel.Title is null || hostel.Phone is null || hostel.Address is null)
                 return true;
 
-            if (hostel.Title.Equals(string.Empty) || hostel.Phone.Equals(string.Empty)
-                || hostel.Address.Equals(string.Empty) || hostel.NumberFloors == 0
+            if (string.IsNullOrWhiteSpace(hostel.Title) || string.IsNullOrWhiteSpace(hostel.Phone)
+                || string.IsNullOrWhiteSpace(hostel.Address) || hostel.NumberFloors == 0
                 || hostel.NumberStudents == 0)
                 return true;
 

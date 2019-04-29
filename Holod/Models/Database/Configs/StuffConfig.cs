@@ -12,12 +12,6 @@ namespace Holod.Models.Database.Configs
                 .WithMany(st => st.Stuffs)
                 .HasForeignKey(s => s.StudentCityId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            builder
-                .HasOne(s => s.Post)
-                .WithOne(p => p.Stuff)
-                .HasForeignKey<Post>(p => p.StuffId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

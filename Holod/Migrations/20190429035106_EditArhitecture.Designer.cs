@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Holod.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190116141438_Initial")]
-    partial class Initial
+    [Migration("20190429035106_EditArhitecture")]
+    partial class EditArhitecture
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024");
+                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085");
 
             modelBuilder.Entity("Holod.Models.Database.Coordinates", b =>
                 {
@@ -69,14 +69,9 @@ namespace Holod.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("StuffId");
-
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StuffId")
-                        .IsUnique();
 
                     b.ToTable("Post");
                 });
@@ -130,6 +125,8 @@ namespace Holod.Migrations
 
                     b.Property<string>("Photo");
 
+                    b.Property<int>("PostId");
+
                     b.Property<int?>("StudentCityId");
 
                     b.Property<string>("Surname");
@@ -137,6 +134,9 @@ namespace Holod.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("HostelId");
+
+                    b.HasIndex("PostId")
+                        .IsUnique();
 
                     b.HasIndex("StudentCityId");
 
@@ -169,14 +169,6 @@ namespace Holod.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Holod.Models.Database.Post", b =>
-                {
-                    b.HasOne("Holod.Models.Database.Stuff", "Stuff")
-                        .WithOne("Post")
-                        .HasForeignKey("Holod.Models.Database.Post", "StuffId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Holod.Models.Database.Resident", b =>
                 {
                     b.HasOne("Holod.Models.Database.Hostel", "Hostel")
@@ -190,6 +182,11 @@ namespace Holod.Migrations
                     b.HasOne("Holod.Models.Database.Hostel", "Hostel")
                         .WithMany("Stuffs")
                         .HasForeignKey("HostelId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Holod.Models.Database.Post", "Post")
+                        .WithOne("Stuff")
+                        .HasForeignKey("Holod.Models.Database.Stuff", "PostId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Holod.Models.Database.StudentCity", "StudentCity")

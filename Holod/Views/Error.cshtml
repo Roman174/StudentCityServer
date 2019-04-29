@@ -1,11 +1,10 @@
 ﻿@model ErrorViewModel
 @{
     ViewData["Title"] = "Error";
+    Layout = "~/Views/Shared/EmptyLayout.cshtml";
 }
 
-
-<div class="error-container">
-    <h1>@Model.Message</h1>
-    <button class="btn btn-danger error-btn">Ок</button>
-</div>
-
+    <form class="error-container" action="@Model.RedirectUrl">
+        <h1>@Model.Message</h1>
+        <input type="submit" value="Ок" />
+    </form>

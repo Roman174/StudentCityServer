@@ -21,15 +21,6 @@ namespace Holod.Controllers
         private readonly IHostingEnvironment hosting;
         private readonly IConfiguration configuration;
 
-        private readonly Post[] posts = {
-            new Post(0, "Заведующий"),
-            new Post(1, "Председатель"),
-            new Post(2, "Культорг"),
-            new Post(3, "Спорторг")
-        };
-
-
-
         public StuffController(DatabaseContext database, IHostingEnvironment hosting, IConfiguration configuration)
         {
             this.database = database;
@@ -41,9 +32,7 @@ namespace Holod.Controllers
         public IActionResult Index()
         {
             var hostels = database.Hostels.ToList();
-
-
-            List<Hostel> list = new List<Hostel>();
+            var posts = database.Post.ToList();
 
             ViewBag.Hostels = hostels;
             ViewBag.Posts = posts;
@@ -63,7 +52,9 @@ namespace Holod.Controllers
 
                 stuff.Photo = fullFileName;
 
-                Post post = posts.FirstOrDefault(p => p.Title == Request.Form["post"]);
+                Post post = database
+                    .Post
+                    .FirstOrDefault(p => p.Title == Request.Form["post"]);
                 stuff.Post = post;
 
                 Hostel hostel = database.Hostels.ToList().FirstOrDefault(p => p.Title == Request.Form["hostelTitle"]);

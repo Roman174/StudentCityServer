@@ -29,12 +29,22 @@ namespace Holod.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginAsync(LoginModel model)
         {
-            if (model is null) return View("Views/Error.cshtml", "Введите данные для авторизации");
+            string redirectUrl = $"{Request.Scheme}://{Request.Host.Host}:{Request.Host.Port}/web/account/login";
+
+            if (model is null) return View("Views/Error.cshtml", new ErrorViewModel
+            {
+                Message = "Введите данные для авторизации",
+                RedirectUrl = redirectUrl
+            });
 
             User user = await database.Users
                 .FirstOrDefaultAsync(u => u.Login == model.Login);
 
-            if (user is null) return View("Views/Error.cshtml", "Пользователь не найден");
+            if (user is null) return View("Views/Error.cshtml", new ErrorViewModel
+            {
+                Message = "Пользователь не найден",
+                RedirectUrl = redirectUrl
+            });
 
             if (user.Password == model.Password)
             {
@@ -49,7 +59,11 @@ namespace Holod.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-            else return View("Views/Error.cshtml", "Неверный пароль");           
+            else return View("Views/Error.cshtml", new ErrorViewModel
+            {
+                Message = "Неверный пароль",
+                RedirectUrl = redirectUrl
+            });           
         }
 
         [HttpGet]
@@ -68,12 +82,22 @@ namespace Holod.Controllers
         [Route("add")]
         public async Task<IActionResult> Add(User user)
         {
-            if (user is null) return View("Views/Error.cshtml", "Введите данные пользователя");
+            string redirectUrl = $"{Request.Scheme}://{Request.Host.Host}/web/account/add";
+
+            if (user is null) return View("Views/Error.cshtml", new ErrorViewModel
+            {
+                Message = "Введите данные пользователя",
+                RedirectUrl = redirectUrl
+            });
 
             User foundUser = await database.Users
                 .FirstOrDefaultAsync(u => u.Login == user.Login);
 
-            if (foundUser != null) return View("Views/Error.cshtml", "Пользователь уже существует");
+            if (foundUser != null) return View("Views/Error.cshtml", new ErrorViewModel
+            {
+                Message = "Пользователь уже существует",
+                RedirectUrl = redirectUrl
+            });
 
             await database.Users.AddAsync(user);
             await database.SaveChangesAsync();

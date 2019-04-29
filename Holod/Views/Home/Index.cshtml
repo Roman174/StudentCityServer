@@ -1,3 +1,26 @@
-﻿@{
+﻿@using Holod.Models.Database
+@model List<Hostel>
+
+@{
     ViewData["Title"] = "Home Page";
 }
+
+<div class="content-container">
+    <div class="side-bar">
+        @{
+            foreach (Hostel hostel in Model)
+            {
+                <button class="btn hostel-item">
+                    @hostel.Title
+                </button>
+            }
+        }
+    </div>
+    <div class="hostel-info">
+        <img class="hostel-photo" src="~/images/hostels/@Model[0].Photo"/>
+        <div class="info-container">
+            <a class="phone-placeholder">Телефон:</a>
+            <a href="tel: @Model[0].Phone" class="phone-data">89227093130</a>
+        </div>
+    </div>
+</div>
