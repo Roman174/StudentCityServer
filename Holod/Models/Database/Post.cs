@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Holod.Models.Database
+﻿namespace Holod.Models.Database
 {
     public class Post
     {

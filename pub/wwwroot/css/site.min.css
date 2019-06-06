@@ -1,0 +1,192 @@
+/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
+for details on configuring this project to bundle and minify static web assets. */
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    height:100%;
+    width:100%;
+}
+
+footer {
+    position: fixed; /* Фиксированное положение */
+    bottom: 0; /* Левый нижний угол */
+    padding: 10px; /* Поля вокруг текста */
+    background: #1f63aa; /* Цвет фона */
+    color: white; /* Цвет текста */
+    width: 100%;
+    text-align: center;
+}
+
+.auth-forms {
+    margin-top:15%;
+}
+
+.navbar-inverse {
+    background-color: #1f63aa;
+    border-color: #1f63aa;
+}
+
+.navbar-inverse .navbar-brand {
+     color: #dedede;
+ }
+
+.navbar-inverse .navbar-nav > li > a {
+    color: #dedede;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    width: auto;
+    padding-left: 0px;
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+}
+
+.center-form {
+    margin-top: 20px;
+    width:300px;
+    text-align:center;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.auth-data {
+    text-align:center;
+} 
+
+.account-form {
+    width: 300px;
+    margin-left:390px;
+}
+
+.error-container {
+    text-align: center;
+    color: #e93d3d;
+    margin-top:20%;
+}
+
+.error-btn {
+    margin-top: 20px;
+    width:100px;
+    height:50px;
+    color:white;
+}
+
+.content-container {
+    width:100vw;
+    display:inline-flex;
+}
+
+.side-bar {
+    width: 20%;
+    padding:10px;
+    padding-top:0px;
+    overflow:scroll;
+    max-height:83vh;
+    margin-top:20px;
+}
+
+.side-bar::-webkit-scrollbar {
+    width:0px;
+}
+
+.content {
+    background:lightgray
+}
+
+.hostel-info {
+    max-width: 100%;
+    display: flow-root;
+    overflow: scroll;
+    max-height: 83vh;
+    border-radius: 20px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    margin-top:20px;
+    margin-left:10px;
+    margin-right:10px;
+    margin-bottom:10px;
+}
+
+.hostel-info::-webkit-scrollbar {
+    width: 0;
+}
+
+.table-info {
+    max-width:90%;
+    margin:20px;
+}
+
+.hostel-photo {
+    width:100%;
+    height:350px;
+    object-fit:cover;
+}
+
+.hostel-item {
+    width: 100%;
+    height: 60px;
+    text-align: center;
+    border-radius: 20px;
+    background: white;
+    border-width: 0px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    color: black;
+    font-weight:bold;
+    margin-top:5px;
+    margin-bottom:10px;
+}
+
+.hostel-item:active, .hostel-item:focus, .hostel-item:target, .hostel-item:hover {
+    outline:none;
+}
+
+.hostel-item:active {
+    background:whitesmoke;
+}
+
+button {
+    outline: none;
+}
+
+.info-container {
+    display:inline-block;
+    margin-left:20px;
+    margin-top:20px;
+}
+
+.phone-placeholder {
+    font-size:20px;
+    color:#9E9E9E;
+}
+
+.phone-data {
+    font-size:20px;
+    font-weight:bold;
+    font-size:20px;
+}

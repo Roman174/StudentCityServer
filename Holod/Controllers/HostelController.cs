@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Holod.Models;
+﻿using Holod.Models;
 using Holod.Models.Database;
 using Holod.Models.Files;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +7,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Holod.Controllers
 {
@@ -38,7 +39,7 @@ namespace Holod.Controllers
         public IActionResult Index()
         {
             return View();
-        }        
+        }
 
         [Authorize]
         public async Task<IActionResult> Add(Hostel hostel, string latitude, string longitude, IFormFile photo)
@@ -68,7 +69,7 @@ namespace Holod.Controllers
                 numericalLatitude = double.Parse(latitude);
                 numericalLongitude = double.Parse(longitude);
 
-                if(numericalLatitude == 0 || numericalLongitude == 0)
+                if (numericalLatitude == 0 || numericalLongitude == 0)
                 {
                     errorModel.Message = "Ошибка препобразования координат";
                     return GenereateErrorView(errorModel);
@@ -77,7 +78,7 @@ namespace Holod.Controllers
             catch (ArgumentNullException)
             {
                 errorModel.Message = "Координаты не введены";
-                
+
                 return GenereateErrorView(errorModel);
             }
             catch (FormatException)
@@ -96,9 +97,9 @@ namespace Holod.Controllers
             try
             {
                 directoryPhotos = configuration.GetSection("HostelPhotoDirectory").Get<string>();
-                fullFileName = $"{hosting.ContentRootPath}{directoryPhotos}\\{photo.FileName}";
+                fullFileName = $"{Directory.GetCurrentDirectory()}{directoryPhotos}//{photo.FileName}";
 
-                if(directoryPhotos.Equals(string.Empty) || fullFileName.Equals(string.Empty))
+                if (directoryPhotos.Equals(string.Empty) || fullFileName.Equals(string.Empty))
                 {
                     errorModel.Message = "Отсутствует информация о директории сохранения фотогрпфии";
                     return GenereateErrorView(errorModel);
@@ -114,7 +115,7 @@ namespace Holod.Controllers
             {
                 await new FileSaver().SaveFileAsync(fullFileName, photo);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 errorModel.Message = "Ошибка сохранения фотографии";
                 return GenereateErrorView(errorModel);
@@ -155,7 +156,7 @@ namespace Holod.Controllers
             {
                 await database.SaveChangesAsync();
             }
-            catch(DbUpdateException)
+            catch (DbUpdateException)
             {
                 errorModel.Message = "Ошибка сохранения в базе данных";
                 return GenereateErrorView(errorModel);

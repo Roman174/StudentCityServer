@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Holod.Models.Database;
+﻿using Holod.Models.Database;
 using Holod.Models.Files;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -45,19 +46,22 @@ namespace Holod.Controllers
         {
             try
             {
-                string directoryPhotos = configuration.GetSection("ImagesDirectory").Get<string>();
-                string fullFileName = $"{hosting.ContentRootPath}{directoryPhotos}\\{photo.FileName}";
+                string directoryPhotos = configuration.GetSection("StuffPhotoDirectory").Get<string>();
+                string fullFileName = $"{Directory.GetCurrentDirectory()}{directoryPhotos}//{photo.FileName}";
 
                 await new FileSaver().SaveFileAsync(fullFileName, photo);
 
-                stuff.Photo = fullFileName;
+                stuff.Photo = photo.FileName;
 
                 Post post = database
                     .Post
                     .FirstOrDefault(p => p.Title == Request.Form["post"]);
                 stuff.Post = post;
 
-                Hostel hostel = database.Hostels.ToList().FirstOrDefault(p => p.Title == Request.Form["hostelTitle"]);
+                Hostel hostel = database
+                    .Hostels
+                    .ToList()
+                    .FirstOrDefault(p => p.Title == Request.Form["hostelTitle"]);
                 stuff.Hostel = hostel;
 
 

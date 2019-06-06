@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Holod</title>
+    <title>@ViewData["Title"] - Панель управления</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     </environment>
 </head>
 <body>
@@ -26,11 +26,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Холодов 2.0</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Панель управления</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="WebAccount" asp-action="Add">Добавить пользователя</a></li>
+                    <li><a asp-area="" asp-controller="WebAccount" asp-action="Add">Добавить администратора</a></li>
                     <li><a asp-controller="Hostel" asp-action="Index">Добавить общежитие</a></li>
                     <li><a asp-controller="Stuff" asp-action="Index">Добавить сотрудника</a></li>
                     <li><a asp-area="" asp-controller="WebAccount" asp-action="Logout">Выйти</a></li>
@@ -42,7 +42,7 @@
     <div class="container body-content">
         @RenderBody()
         <footer>
-            <p>&copy; 2018 - Студгородок ЮУрГУ</p>
+            <p>&copy; 2019 - Студгородок ЮУрГУ</p>
         </footer>
     </div>
 
@@ -64,7 +64,7 @@
                 crossorigin="anonymous"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
 
     @RenderSection("Scripts", required: false)

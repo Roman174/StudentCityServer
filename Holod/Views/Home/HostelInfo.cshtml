@@ -1,0 +1,12 @@
+﻿@using Holod.Models.Database
+@model Hostel
+
+    <div class="hostel-info">
+        <img class="hostel-photo" src="~/images/hostels/@Model.Photo" />
+        <div class="info-container">
+            <text class="phone-placeholder">Телефон:</text>
+            <a href="tel: @Model.Phone" class="phone-data">89227093130</a>
+
+            <a class="map">На карте</a>
+        </div>
+    </div>

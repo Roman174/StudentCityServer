@@ -14,7 +14,7 @@ namespace Holod.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085");
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099");
 
             modelBuilder.Entity("Holod.Models.Database.Coordinates", b =>
                 {
@@ -62,6 +62,43 @@ namespace Holod.Migrations
                     b.ToTable("Hostels");
                 });
 
+            modelBuilder.Entity("Holod.Models.Database.Pass.PassInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("IdResident");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdResident")
+                        .IsUnique();
+
+                    b.ToTable("Passes");
+                });
+
+            modelBuilder.Entity("Holod.Models.Database.Pass.RequestPass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Faculty");
+
+                    b.Property<string>("Firstname");
+
+                    b.Property<string>("NumberOfHostel");
+
+                    b.Property<int>("NumberOfRoom");
+
+                    b.Property<string>("Patronymic");
+
+                    b.Property<string>("Surname");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestsPasses");
+                });
+
             modelBuilder.Entity("Holod.Models.Database.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -74,16 +111,57 @@ namespace Holod.Migrations
                     b.ToTable("Post");
                 });
 
+            modelBuilder.Entity("Holod.Models.Database.QueueInfo.CellQueue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("QueueId");
+
+                    b.Property<DateTime>("RecordingTime");
+
+                    b.Property<int>("ResidentId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QueueId");
+
+                    b.HasIndex("ResidentId")
+                        .IsUnique();
+
+                    b.ToTable("CellQueue");
+                });
+
+            modelBuilder.Entity("Holod.Models.Database.QueueInfo.Queue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("HostelId");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HostelId");
+
+                    b.ToTable("Queue");
+                });
+
             modelBuilder.Entity("Holod.Models.Database.Resident", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CellQueueId");
 
                     b.Property<string>("Firstname");
 
                     b.Property<int?>("HostelId");
 
                     b.Property<string>("NumberRoom");
+
+                    b.Property<int?>("PassInfoId");
 
                     b.Property<string>("Patronymic");
 
@@ -167,6 +245,35 @@ namespace Holod.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Holod.Models.Database.Pass.PassInfo", b =>
+                {
+                    b.HasOne("Holod.Models.Database.Resident", "Resident")
+                        .WithOne("PassInfo")
+                        .HasForeignKey("Holod.Models.Database.Pass.PassInfo", "IdResident")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Holod.Models.Database.QueueInfo.CellQueue", b =>
+                {
+                    b.HasOne("Holod.Models.Database.QueueInfo.Queue", "Queue")
+                        .WithMany("Cells")
+                        .HasForeignKey("QueueId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Holod.Models.Database.Resident", "Resident")
+                        .WithOne("CellQueue")
+                        .HasForeignKey("Holod.Models.Database.QueueInfo.CellQueue", "ResidentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Holod.Models.Database.QueueInfo.Queue", b =>
+                {
+                    b.HasOne("Holod.Models.Database.Hostel", "Hostel")
+                        .WithMany("Queues")
+                        .HasForeignKey("HostelId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Holod.Models.Database.Resident", b =>
                 {
                     b.HasOne("Holod.Models.Database.Hostel", "Hostel")
@@ -189,7 +296,8 @@ namespace Holod.Migrations
 
                     b.HasOne("Holod.Models.Database.StudentCity", "StudentCity")
                         .WithMany("Stuffs")
-                        .HasForeignKey("StudentCityId");
+                        .HasForeignKey("StudentCityId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

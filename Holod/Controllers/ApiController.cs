@@ -37,11 +37,11 @@ namespace Holod.Controllers
                     .Include(hostel => hostel.Residents)
                     .ToList();
             }
-            catch(ArgumentNullException e)
+            catch (ArgumentNullException e)
             {
                 return BadRequest("object of hostels in database is null");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -50,11 +50,11 @@ namespace Holod.Controllers
                 .Select(hostel =>
                 {
                     hostel.Photo = $"{host}/images/hostels/{hostel.Photo}";
-                    hostel.Stuffs = hostel.Stuffs.Select( stuff =>
-                    {
-                        stuff.Photo = $"{host}/images/stuffs/{hostel.Photo}";
-                        return stuff;
-                    })
+                    hostel.Stuffs = hostel.Stuffs.Select(stuff =>
+                   {
+                       stuff.Photo = $"{host}/images/stuffs/{stuff.Photo}";
+                       return stuff;
+                   })
                     .ToList();
                     return hostel;
                 })

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Holod.Models;
+﻿using Holod.Models;
 using Holod.Models.Database;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -9,6 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Holod.Controllers
 {
@@ -63,7 +63,7 @@ namespace Holod.Controllers
             {
                 Message = "Неверный пароль",
                 RedirectUrl = redirectUrl
-            });           
+            });
         }
 
         [HttpGet]

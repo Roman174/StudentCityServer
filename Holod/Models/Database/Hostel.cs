@@ -19,6 +19,7 @@ namespace Holod.Models.Database
 
         public List<Stuff> Stuffs { get; set; }
         public List<Resident> Residents { get; set; }
+        public List<QueueInfo.Queue> Queues { get; set; }
 
         public int StudentCityId { get; set; }
         [ForeignKey("StudentCityId")]
@@ -32,6 +33,6 @@ namespace Holod.Models.Database
             Coordinates = new Coordinates();
             Stuffs = new List<Stuff>();
             Residents = new List<Resident>();
-        }        
+        }
     }
 }
