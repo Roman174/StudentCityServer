@@ -8,9 +8,9 @@ namespace Holod.Models.Database.Configs
         public void Configure(EntityTypeBuilder<Post> builder)
         {
             builder
-                .HasOne(post => post.Stuff)
+                .HasMany(post => post.Stuffs)
                 .WithOne(stuff => stuff.Post)
-                .HasForeignKey<Stuff>(stuff => stuff.PostId);
+                .HasForeignKey(stuff => stuff.PostId);
         }
     }
 }

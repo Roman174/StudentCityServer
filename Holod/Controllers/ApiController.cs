@@ -22,20 +22,59 @@ namespace Holod.Controllers
         }
 
         [HttpGet]
+        [Route("hostel/info/{hostelName}")]
+        public IActionResult HostelInfo(string hostelName)
+        {
+            if(database.Hostels.Count() == 0)
+            {
+                return BadRequest("database is empty");
+            }
+
+            Hostel hostel = database.Hostels
+                .Include(h => h.Coordinates)
+                .Include(h => h.Stuffs)
+                    .ThenInclude(stuff => stuff.Post)
+                .Include(h => h.Residents)
+                .ToList()
+                .Select(h =>
+                {
+                    h.Stuffs.ForEach(stuff =>
+                    {
+                        stuff.Post.Stuffs = null;
+                    });
+                    return h;
+                })
+                .FirstOrDefault(h => h.Title == hostelName);
+
+            string host = $"{Request.Scheme}://{Request.Host.Host}";
+            hostel.Photo = $"{host}/images/hostels/{hostel.Photo}";
+            hostel.Stuffs.ForEach(stuff =>
+            {
+                stuff.Photo = stuff.Photo = $"{host}/images/stuffs/{stuff.Photo}";
+                stuff.Post.Stuffs = null;
+            });
+
+            if (hostel is null)
+            {
+                return StatusCode(404, "hostel not found");
+            }
+            else
+            {
+                return Ok(hostel);
+            }
+        }
+
+        [HttpGet]
         [Route("hostels/list")]
         public IActionResult ListHostels()
         {
             List<Hostel> hostels;
-            string host = $"{Request.Scheme}://{Request.Host.Host}";
             try
             {
                 hostels = database
                     .Hostels
-                    .Include(hostel => hostel.Coordinates)
-                    .Include(hostel => hostel.Stuffs)
-                        .ThenInclude(stuff => stuff.Post)
-                    .Include(hostel => hostel.Residents)
                     .ToList();
+                return Ok(hostels);
             }
             catch (ArgumentNullException e)
             {
@@ -45,22 +84,6 @@ namespace Holod.Controllers
             {
                 return BadRequest(e.Message);
             }
-
-            hostels = hostels
-                .Select(hostel =>
-                {
-                    hostel.Photo = $"{host}/images/hostels/{hostel.Photo}";
-                    hostel.Stuffs = hostel.Stuffs.Select(stuff =>
-                   {
-                       stuff.Photo = $"{host}/images/stuffs/{stuff.Photo}";
-                       return stuff;
-                   })
-                    .ToList();
-                    return hostel;
-                })
-                .ToList();
-
-            return Ok(hostels);
         }
 
         [HttpGet]

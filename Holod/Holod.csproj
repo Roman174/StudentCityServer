@@ -16,6 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="scp06283\" />
+    <Folder Include="wwwroot\images\hostels\" />
     <Folder Include="wwwroot\images\stuffs\" />
     <Folder Include="wwwroot\images\stuffs\" />
   </ItemGroup>

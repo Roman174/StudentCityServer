@@ -49,7 +49,7 @@ namespace Holod.Controllers
                 string directoryPhotos = configuration.GetSection("StuffPhotoDirectory").Get<string>();
                 string fullFileName = $"{Directory.GetCurrentDirectory()}{directoryPhotos}//{photo.FileName}";
 
-                await new FileSaver().SaveFileAsync(fullFileName, photo);
+                 await new FileSaver().SaveFileAsync(fullFileName, photo);
 
                 stuff.Photo = photo.FileName;
 

@@ -211,8 +211,7 @@ namespace Holod.Migrations
 
                     b.HasIndex("HostelId");
 
-                    b.HasIndex("PostId")
-                        .IsUnique();
+                    b.HasIndex("PostId");
 
                     b.HasIndex("StudentCityId");
 
@@ -290,8 +289,8 @@ namespace Holod.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Holod.Models.Database.Post", "Post")
-                        .WithOne("Stuff")
-                        .HasForeignKey("Holod.Models.Database.Stuff", "PostId")
+                        .WithMany("Stuffs")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Holod.Models.Database.StudentCity", "StudentCity")
