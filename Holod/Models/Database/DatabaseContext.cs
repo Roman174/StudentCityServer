@@ -25,6 +25,7 @@ namespace Holod.Models.Database
             builder.ApplyConfiguration(new PassConfig());
             builder.ApplyConfiguration(new PostConfig());
             builder.ApplyConfiguration(new StuffConfig());
+            builder.ApplyConfiguration(new QueueConfig());
         }
     }
 }
